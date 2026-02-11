@@ -29,7 +29,11 @@ class OrganizationController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'yandex_url' => 'required|url|regex:/^https:\/\/yandex\.(ru|by|kz|ua|com)\/maps\/org\/.*/i',
+            'yandex_url' => [
+                'required',
+                'url',
+                'regex:~^https://yandex\.(ru|by|kz|ua|com)/maps/org/.*~i'
+            ]
         ]);
 
         $url = $request->yandex_url;
