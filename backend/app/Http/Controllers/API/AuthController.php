@@ -47,10 +47,10 @@ class AuthController extends Controller
             ]);
         }
 
+        $request->session()->regenerate();
+
         $user = User::where('email', $request->email)->first();
 
-        // Sanctum SPA: не создаём токен, просто возвращаем пользователя
-        // Браузер получит cookie сессии
         return response()->json(['user' => $user]);
     }
 
@@ -58,6 +58,10 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return response()->json(['message' => 'Успешный выход']);
     }
 

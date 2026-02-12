@@ -4,16 +4,16 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
-use App\Services\YandexMapsService;
+use App\Contracts\YandexMapsServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class OrganizationController extends Controller
 {
-    protected $yandexService;
+    protected YandexMapsServiceInterface $yandexService;
 
-    public function __construct(YandexMapsService $yandexService)
+    public function __construct(YandexMapsServiceInterface $yandexService)
     {
         $this->yandexService = $yandexService;
     }
@@ -22,6 +22,9 @@ class OrganizationController extends Controller
     public function show(Request $request)
     {
         $organization = $request->user()->organization;
+        if (!$organization) {
+            return response()->json(null, 200); // OK, просто null
+        }
         return response()->json($organization);
     }
 

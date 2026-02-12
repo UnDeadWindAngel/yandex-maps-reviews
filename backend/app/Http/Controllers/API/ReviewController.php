@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Services\YandexMapsService;
+use App\Contracts\YandexMapsServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
-    protected $yandexService;
+    protected YandexMapsServiceInterface $yandexService;
 
-    public function __construct(YandexMapsService $yandexService)
+    public function __construct(YandexMapsServiceInterface $yandexService)
     {
         $this->yandexService = $yandexService;
     }

@@ -9,9 +9,17 @@ export const useOrganizationStore = defineStore('organization', () => {
 
     async function fetchOrganization() {
         try {
+            await axios.get('/sanctum/csrf-cookie')
             const response = await axios.get('/api/organization')
             organization.value = response.data
         } catch (err) {
+            if (err.response?.status !== 401) {
+                const authStore = useAuthStore()
+                await authStore.logout()
+            }
+            else{
+                console.error('Ошибка загрузки организации:', err)
+            }
             organization.value = null
         }
     }
@@ -32,5 +40,11 @@ export const useOrganizationStore = defineStore('organization', () => {
         }
     }
 
-    return { organization, loading, error, fetchOrganization, saveOrganization }
+    function $reset() {
+        organization.value = null
+        loading.value = false
+        error.value = null
+    }
+
+    return { organization, loading, error, fetchOrganization, saveOrganization, $reset }
 })

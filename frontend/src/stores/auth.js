@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { ref } from 'vue'
+import { useOrganizationStore } from './organization'
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref(null)
@@ -41,6 +42,15 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
+    // Вспомогательная функция для удаления кук
+    function clearCookies() {
+        const cookies = ['laravel_session', 'XSRF-TOKEN'];
+        cookies.forEach(name => {
+            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost`;
+            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+        });
+    }
+
     // Выход
     async function logout() {
         loading.value = true
@@ -48,6 +58,9 @@ export const useAuthStore = defineStore('auth', () => {
             await axios.get('/sanctum/csrf-cookie')
             await axios.post('/api/logout')
             user.value = null
+            clearCookies()
+            const orgStore = useOrganizationStore()
+            orgStore.$reset()
         } catch (err) {
             error.value = 'Ошибка выхода'
         } finally {
@@ -65,6 +78,7 @@ export const useAuthStore = defineStore('auth', () => {
             // 401 — пользователь не аутентифицирован, это нормально
             if (err.response?.status === 401) {
                 user.value = null
+                clearCookies()
             } else {
                 console.error('Ошибка при получении пользователя:', err)
             }

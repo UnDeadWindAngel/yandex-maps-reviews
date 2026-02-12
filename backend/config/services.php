@@ -37,6 +37,8 @@ return [
 
     'yandex' => [
         'api_key' => env('YANDEX_API_KEY'),
+        'cache_ttl' => env('YANDEX_CACHE_TTL', 300), // секунды
+        'driver' => env('YANDEX_DRIVER', 'fake'), // fake, real, public
     ],
 
 ];

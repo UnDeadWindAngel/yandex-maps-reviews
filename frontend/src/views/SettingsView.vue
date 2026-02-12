@@ -15,18 +15,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import { useOrganizationStore } from '@/stores/organization'
+import { useAuthStore } from '@/stores/auth'
 
 const orgStore = useOrganizationStore()
+const authStore = useAuthStore()
 const yandexUrl = ref('')
 
-onMounted(async () => {
-  await orgStore.fetchOrganization()
-  if (orgStore.organization) {
-    yandexUrl.value = orgStore.organization.yandex_url
+// Загружаем организацию при смене пользователя (сработает и при монтировании)
+watch(() => authStore.user, async (newUser) => {
+  if (newUser) {
+    await orgStore.fetchOrganization()
+    yandexUrl.value = orgStore.organization?.yandex_url || ''
+  } else {
+    orgStore.$reset()
+    yandexUrl.value = ''
   }
-})
+}, { immediate: true })
 
 async function save() {
   await orgStore.saveOrganization(yandexUrl.value)

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Services\YandexMapsService;
+use App\Services\FakeYandexMapsService;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -11,7 +11,7 @@ class YandexMapsServiceTest extends TestCase
     #[Test]
     public function it_can_parse_org_id_from_yandex_maps_url()
     {
-        $service = new YandexMapsService();
+        $service = new FakeYandexMapsService();
 
         $url = 'https://yandex.ru/maps/org/abc123/';
         $this->assertEquals('abc123', $service->parseOrgIdFromUrl($url));

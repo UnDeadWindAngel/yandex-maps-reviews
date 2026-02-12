@@ -39,11 +39,6 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
-  // Загружаем пользователя, если ещё не загружен
-  if (!authStore.user) {
-    await authStore.fetchUser()
-  }
-
   if (to.meta.requiresAuth && !authStore.user) {
     next({ name: 'login' })
   } else if (to.meta.guest && authStore.user) {
