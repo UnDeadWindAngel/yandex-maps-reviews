@@ -64,6 +64,8 @@ class AuthController extends Controller
     // Получение текущего пользователя
     public function user(Request $request)
     {
-        return response()->json($request->user());
+        return response()->json([
+            'user' => $request->user()   // оборачиваем в объект { user: ... }
+        ]);
     }
 }

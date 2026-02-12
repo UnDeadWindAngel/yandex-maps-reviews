@@ -4,6 +4,12 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\OrganizationController;
 use App\Http\Controllers\API\ReviewController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
+DB::listen(function ($query) {
+    Log::info('SQL', [$query->sql, $query->bindings, $query->time]);
+});
 
 // Публичные маршруты
 Route::post('/register', [AuthController::class, 'register']);
