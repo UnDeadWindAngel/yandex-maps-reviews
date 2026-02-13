@@ -32,7 +32,6 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             await axios.get('/sanctum/csrf-cookie')
             const response = await axios.post('/api/register', data)
-            user.value = response.data.user
             return response.data
         } catch (err) {
             error.value = err.response?.data?.message || 'Ошибка регистрации'

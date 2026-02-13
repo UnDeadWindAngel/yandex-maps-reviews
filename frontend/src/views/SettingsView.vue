@@ -1,16 +1,56 @@
 <template>
-  <div>
-    <h1>Настройки организации</h1>
-    <div v-if="orgStore.organization">
-      <p>Текущая ссылка: {{ orgStore.organization.yandex_url }}</p>
-      <p>ID организации: {{ orgStore.organization.org_id }}</p>
+  <div class="max-w-2xl">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">Подключение площадок</h1>
+
+    <!-- Форма подключения -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+      <h2 class="text-lg font-semibold mb-4">Подключить Яндекс</h2>
+
+      <div v-if="orgStore.organization" class="mb-4 text-sm text-gray-600">
+        <span class="font-medium">Текущая ссылка:</span>
+        <a :href="orgStore.organization.yandex_url" target="_blank" class="text-blue-600 ml-2 break-all">
+          {{ orgStore.organization.yandex_url }}
+        </a>
+      </div>
+
+      <form @submit.prevent="save">
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Укажите ссылку на Яндекс
+        </label>
+        <input
+            v-model="yandexUrl"
+            type="url"
+            placeholder="https://yandex.ru/maps/org/..."
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            required
+        />
+        <p class="text-xs text-gray-500 mt-1">
+          Пример: https://yandex.ru/maps/org/abc123/
+        </p>
+
+        <div v-if="orgStore.error" class="mt-3 text-sm text-red-600">
+          {{ orgStore.error }}
+        </div>
+
+        <button
+            type="submit"
+            :disabled="orgStore.loading"
+            class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-300 transition-colors"
+        >
+          {{ orgStore.loading ? 'Сохранение...' : 'Сохранить' }}
+        </button>
+      </form>
     </div>
-    <form @submit.prevent="save">
-      <label>Ссылка на карточку Яндекс.Карт</label>
-      <input v-model="yandexUrl" placeholder="https://yandex.ru/maps/org/..." required />
-      <button type="submit" :disabled="orgStore.loading">Сохранить</button>
-      <div v-if="orgStore.error" class="error">{{ orgStore.error }}</div>
-    </form>
+
+    <!-- Подсказка (можно убрать, если не нужна) -->
+    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 text-sm text-yellow-800">
+      <p class="font-medium">Как получить ссылку?</p>
+      <ol class="list-decimal list-inside mt-1 space-y-1">
+        <li>Откройте Яндекс Карты и найдите вашу организацию</li>
+        <li>Скопируйте URL из адресной строки браузера</li>
+        <li>Вставьте его в поле выше</li>
+      </ol>
+    </div>
   </div>
 </template>
 

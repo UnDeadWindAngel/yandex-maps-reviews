@@ -1,64 +1,39 @@
 <template>
-  <div class="register">
-    <h1>Регистрация</h1>
-    <form @submit.prevent="handleSubmit">
-      <div class="form-group">
-        <label for="name">Имя</label>
-        <input
-            id="name"
-            v-model="form.name"
-            type="text"
-            required
-            autocomplete="name"
-        />
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+      <div>
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Регистрация
+        </h2>
       </div>
-
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input
-            id="email"
-            v-model="form.email"
-            type="email"
-            required
-            autocomplete="email"
-        />
+      <div class="bg-white py-8 px-4 shadow-xl rounded-xl sm:px-10">
+        <form class="space-y-6" @submit.prevent="handleSubmit">
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Имя</label>
+            <input id="name" v-model="form.name" type="text" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input id="email" v-model="form.email" type="email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+          </div>
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Пароль</label>
+            <input id="password" v-model="form.password" type="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+          </div>
+          <div>
+            <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Подтверждение пароля</label>
+            <input id="password_confirmation" v-model="form.password_confirmation" type="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+          </div>
+          <button type="submit" :disabled="authStore.loading" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300">
+            {{ authStore.loading ? 'Регистрация...' : 'Зарегистрироваться' }}
+          </button>
+          <div v-if="authStore.error" class="text-sm text-red-600 text-center">{{ authStore.error }}</div>
+        </form>
+        <div class="mt-6 text-center">
+          <router-link to="/login" class="text-sm text-blue-600 hover:text-blue-500">Уже есть аккаунт? Войти</router-link>
+        </div>
       </div>
-
-      <div class="form-group">
-        <label for="password">Пароль</label>
-        <input
-            id="password"
-            v-model="form.password"
-            type="password"
-            required
-            autocomplete="new-password"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="password_confirmation">Подтверждение пароля</label>
-        <input
-            id="password_confirmation"
-            v-model="form.password_confirmation"
-            type="password"
-            required
-            autocomplete="new-password"
-        />
-      </div>
-
-      <button type="submit" :disabled="authStore.loading">
-        {{ authStore.loading ? 'Регистрация...' : 'Зарегистрироваться' }}
-      </button>
-
-      <div v-if="authStore.error" class="error">
-        {{ authStore.error }}
-      </div>
-    </form>
-
-    <p>
-      Уже есть аккаунт?
-      <router-link to="/login">Войти</router-link>
-    </p>
+    </div>
   </div>
 </template>
 
@@ -80,47 +55,8 @@ const form = ref({
 async function handleSubmit() {
   try {
     await authStore.register(form.value)
-    router.push('/')
+    router.push('/login?registered=true')
   } catch (e) {
-    // Ошибка уже записана в authStore.error
   }
 }
 </script>
-
-<style scoped>
-.register {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-}
-.form-group {
-  margin-bottom: 15px;
-}
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #42b883;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-button:disabled {
-  background-color: #cccccc;
-}
-.error {
-  color: red;
-  margin-top: 10px;
-}
-</style>

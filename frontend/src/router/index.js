@@ -1,15 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import AppLayout from '@/components/AppLayout.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: () => import('@/views/HomeView.vue'),
-      meta: { requiresAuth: true }
-    },
     {
       path: '/login',
       name: 'login',
@@ -23,16 +18,26 @@ const router = createRouter({
       meta: { guest: true }
     },
     {
-      path: '/settings',
-      name: 'settings',
-      component: () => import('@/views/SettingsView.vue'),
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/reviews',
-      name: 'reviews',
-      component: () => import('@/views/ReviewsView.vue'),
-      meta: { requiresAuth: true }
+      path: '/',
+      component: AppLayout,
+      meta: { requiresAuth: true },
+      children: [
+        {
+          path: '',
+          name: 'home',
+          component: () => import('@/views/HomeView.vue')
+        },
+        {
+          path: 'settings',
+          name: 'settings',
+          component: () => import('@/views/SettingsView.vue')
+        },
+        {
+          path: 'reviews',
+          name: 'reviews',
+          component: () => import('@/views/ReviewsView.vue')
+        }
+      ]
     }
   ]
 })
