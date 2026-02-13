@@ -1,10 +1,10 @@
 vendor/
 node_modules/
 .env
-.env.*
 public/hot
 public/build
 storage/*.key
 .phpunit.result.cache
 docker-compose.override.yml
 .idea/
+/.env.prod

@@ -1,0 +1,22 @@
+FROM php:8.3-fpm-alpine
+
+# Установка системных зависимостей (для PostgreSQL и MySQL)
+RUN apk add --no-cache postgresql-dev && docker-php-ext-install pdo_pgsql pdo_mysql
+
+# Установка Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Копируем composer.json и composer.lock (для кеширования зависимостей)
+WORKDIR /var/www/html
+COPY backend/composer.json backend/composer.lock* ./
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+
+# Копируем остальной код (кроме vendor, который уже установлен)
+COPY backend ./
+
+# Права на storage и bootstrap/cache
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
+EXPOSE 9000
+CMD ["php-fpm"]
